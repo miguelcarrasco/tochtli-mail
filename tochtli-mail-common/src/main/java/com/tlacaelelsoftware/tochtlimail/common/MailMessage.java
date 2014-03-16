@@ -1,17 +1,17 @@
 package com.tlacaelelsoftware.tochtlimail.common;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 public class MailMessage {
 
-    @NotNull
+    @NotBlank
     @Email
     private String fromAddress;
 
-    @NotNull
+    @NotBlank
     private String toRecipients;
 
     private String ccRecipients;
@@ -26,6 +26,17 @@ public class MailMessage {
 
     @NotBlank
     private String text;
+
+    @JsonCreator
+    public MailMessage(@JsonProperty("fromAddress") String fromAddress,
+                       @JsonProperty("toRecipients") String toRecipients,
+                       @JsonProperty("subject") String subject,
+                       @JsonProperty("text") String text) {
+        this.fromAddress = fromAddress;
+        this.toRecipients = toRecipients;
+        this.subject = subject;
+        this.text = text;
+    }
 
     public String getFromAddress() {
         return fromAddress;
