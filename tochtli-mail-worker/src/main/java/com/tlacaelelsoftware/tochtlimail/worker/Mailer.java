@@ -1,6 +1,7 @@
 package com.tlacaelelsoftware.tochtlimail.worker;
 
 import com.tlacaelelsoftware.tochtlimail.common.MailMessage;
+import com.tlacaelelsoftware.tochtlimail.common.ValidatorHelper;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -12,6 +13,7 @@ public class Mailer {
     private Properties props;
 
     private String username;
+    private ValidatorHelper<MailMessage> validator = new ValidatorHelper<MailMessage>();
     private String password;
 
     public Mailer(Properties props) {
@@ -21,8 +23,7 @@ public class Mailer {
     }
 
     public void send(MailMessage mailMessage) throws MessagingException {
-        //TODO validate mailMessage
-
+        validator.validate(mailMessage);
         Session session = Session.getInstance(props,
                 new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {

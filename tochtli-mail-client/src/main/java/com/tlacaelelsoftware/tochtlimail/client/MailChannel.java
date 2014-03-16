@@ -14,6 +14,8 @@ import java.io.IOException;
  *
  */
 public class MailChannel {
+
+    private ValidatorHelper<MailMessage> validator = new ValidatorHelper<MailMessage>();
     private String taskQueueName;
     private String host;
     private ConnectionFactory factory = new ConnectionFactory();
@@ -25,7 +27,7 @@ public class MailChannel {
     }
 
     public void send(MailMessage mail) throws IOException {
-        validate(mail);
+        validator.validate(mail);
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
@@ -43,11 +45,4 @@ public class MailChannel {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsBytes(mail);
     }
-
-    private void validate(MailMessage mail) {
-        ValidatorHelper<MailMessage> validator = new ValidatorHelper<MailMessage>();
-        validator.validate(mail);
-    }
-
-
 }
