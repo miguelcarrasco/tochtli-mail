@@ -2,7 +2,7 @@ package com.tlacaelelsoftware.tochtlimail.worker;
 
 import org.kohsuke.args4j.Option;
 
-public class CmdLineOptions {
+public class CmdLineConfiguration {
 
     @Option(name = "-v", aliases = {"--version"}, usage = "print tochtli mail version and exit")
     private boolean printVersion = false;

@@ -10,13 +10,25 @@ import java.io.PrintStream;
 import java.util.Properties;
 
 public class App {
-    private static CmdLineOptions options = new CmdLineOptions();
+    private static CmdLineConfiguration cmdLineConfig = new CmdLineConfiguration();
     public static final String VERSION = "1.0-SNAPSHOT";
 
     private static CmdLineParser parser;
 
     public static void main(String[] args) {
-        parser = new CmdLineParser(options);
+        parseCmdLineArgs(args);
+
+        try {
+            Properties properties = getPropertiesFromFile(cmdLineConfig.getConfigFileName());
+            new MailWorker(properties).start();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private static void parseCmdLineArgs(String[] args) {
+        parser = new CmdLineParser(cmdLineConfig);
 
         //The character number width to print usage in cli.
         parser.setUsageWidth(80);
@@ -34,30 +46,14 @@ public class App {
             System.exit(1);
         }
 
-        if (options.isPrintHelp()) {
+        if (cmdLineConfig.isPrintHelp()) {
             printUsage(parser, System.out);
             System.exit(0);
         }
 
-        if (options.isPrintVersion()) {
+        if (cmdLineConfig.isPrintVersion()) {
             System.out.println("Version: " + VERSION);
             System.exit(0);
-        }
-
-        Properties properties = null;
-        try {
-            properties = getPropertiesFromFile(options.getConfigFileName());
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-
-        // Initialize worker with properties file
-        try {
-            new MailWorker(properties).start();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
         }
     }
 
